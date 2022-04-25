@@ -1,11 +1,15 @@
-import { compose, createStore, applyMiddleware } from 'redux';
-import logger from 'redux-logger';
+import { compose, createStore, applyMiddleware } from "redux";
+import { rootReducer } from "./root-reducer";
 
-import { rootReducer } from './root-reducer';
+const loggerMiddleware = (store) => (next) => (action) => {
+  if (!action.type) {
+    return next(action);
+  }
 
-const middleWares = [process.env.NODE_ENV === 'development' && logger].filter(
-  Boolean
-);
+  next(action);
+};
+
+const middleWares = [loggerMiddleware];
 
 const composedEnhancers = compose(applyMiddleware(...middleWares));
 
